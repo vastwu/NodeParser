@@ -82,7 +82,7 @@ describe('修改', function() {
     const html = tree.toHTML()
     expect(html).to.equal('<div>aaa<span></span>ccc</div>')
   })
-  it('新增节点属性', async function () {
+  it('新增节点属性', function () {
     let content = `<div>aaa<b></b>ccc</div>`;
     const tree = NodeParser.parse(content)
     tree.walk(function (node) {
@@ -102,5 +102,20 @@ describe('修改', function() {
     expect(html).to.equal(content)
   })
 
+})
+
+describe.only('引号内容处理', function() {
+  it('双引号', function () {
+    let content = `<div>aaa<b><path title="<b>bbb</b>">哈哈哈</path></b>ccc<path attrs="kkk"/></div>`;
+    const tree = NodeParser.parse(content)
+    const html = tree.toHTML()
+    expect(html).to.equal(content)
+  })
+  it('单引号', function () {
+    let content = `<div>aaa<b><path title='<b>bbb</b>'>哈哈哈</path></b>ccc<path attrs="kkk"/></div>`;
+    const tree = NodeParser.parse(content)
+    const html = tree.toHTML()
+    expect(html).to.equal(content.replace(/'/g, '"'))
+  })
 })
 
