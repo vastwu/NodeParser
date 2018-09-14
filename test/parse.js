@@ -60,26 +60,24 @@ describe('解析和还原', function() {
   })
 })
 describe('修改', function() {
-  it('删除空节点', async function () {
+  it('删除空节点', function () {
     let content = `<div>aaa<span class="remove"></span>ccc</div>`;
     const tree = NodeParser.parse(content)
-    await tree.walk(function (node, next) {
+    tree.walk(function (node) {
       if (node.isEmpty()) {
         node.remove()
       }
-      next()
     })
     const html = tree.toHTML()
     expect(html).to.equal('<div>aaaccc</div>')
   })
-  it('修改节点类型', async function () {
+  it('修改节点类型', function () {
     let content = `<div>aaa<b></b>ccc</div>`;
     const tree = NodeParser.parse(content)
-    await tree.walk(function (node, next) {
+    tree.walk(function (node) {
       if (node.isEmpty()) {
         node.tagName = 'span'
       }
-      next()
     })
     const html = tree.toHTML()
     expect(html).to.equal('<div>aaa<span></span>ccc</div>')
@@ -87,15 +85,22 @@ describe('修改', function() {
   it('新增节点属性', async function () {
     let content = `<div>aaa<b></b>ccc</div>`;
     const tree = NodeParser.parse(content)
-    await tree.walk(function (node, next) {
+    tree.walk(function (node) {
       if (node.isEmpty()) {
         node.attrs.class = 'new'
         node.attrs['data-id'] = 'data-id'
       }
-      next()
     })
     const html = tree.toHTML()
     expect(html).to.equal('<div>aaa<b class="new" data-id="data-id"></b>ccc</div>')
   })
+
+  it('识别自闭和标签', function () {
+    let content = `<div>aaa<b><path>哈哈哈</path></b>ccc<path attrs="kkk"/></div>`;
+    const tree = NodeParser.parse(content)
+    const html = tree.toHTML()
+    expect(html).to.equal(content)
+  })
+
 })
 
