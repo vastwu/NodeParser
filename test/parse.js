@@ -117,5 +117,11 @@ describe.only('引号内容处理', function() {
     const html = tree.toHTML()
     expect(html).to.equal(content.replace(/'/g, '"'))
   })
+  it('文本节点内的引号', function () {
+    let content = `<div>a:"aa<b><path title='<b>bbb</b>'>哈哈哈</path></b>ccc<path attrs="kkk"/></div>`;
+    const tree = NodeParser.parse(content)
+    const html = tree.toHTML()
+    expect(html).to.equal(content.replace(/'/g, '"'))
+  })
 })
 
